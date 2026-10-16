@@ -1,0 +1,6 @@
+{
+  "zones": [
+    {"room_id": "meeting-room-a", "bounds": [0.0, 0.0, 0.5, 1.0]},
+    {"room_id": "work-area", "bounds": [0.5, 0.0, 1.0, 1.0]}
+  ]
+}

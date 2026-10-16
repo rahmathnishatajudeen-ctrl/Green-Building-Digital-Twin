@@ -1,0 +1,60 @@
+# Windows PowerShell. Requires Python 3.10+ and internet for dependencies/weights.
+# Copy the project to the new machine, excluding .venv, data and API keys.
+# Open every terminal in the project root (the folder containing pyproject.toml).
+# Run only the sections you need; do not execute the entire file at once.
+
+# 1. ONE-TIME SETUP ON THE NEW MACHINE
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+# 2. TERMINAL 1: DASHBOARD WITH RULE-BASED RECOMMENDATIONS
+$env:GBDT_AI_PROVIDER = 'rules'
+.\.venv\Scripts\python.exe -m gbdt_vision.twin_server --host 127.0.0.1 --port 8000
+
+# 3. TERMINAL 2: LIVE CAMERA (leave Terminal 1 running)
+.\.venv\Scripts\python.exe -m gbdt_vision.cli --source 0 --camera-id camera-1 --output data/observations.jsonl --preview
+
+# 4. TERMINAL 3: OPEN THE DASHBOARD
+Start-Process 'http://127.0.0.1:8000/?mode=live'
+
+# Optional: demo without a camera, or API documentation.
+Start-Process 'http://127.0.0.1:8000/?mode=demo'
+Start-Process 'http://127.0.0.1:8000/docs'
+
+# 5. OPTIONAL: OPENAI INSTEAD OF SECTION 2
+# Stop the dashboard with Ctrl+C, then run these in Terminal 1.
+# Enter the key only at the hidden prompt. Requires your own authorized account.
+$env:GBDT_AI_PROVIDER = 'openai'
+$env:OPENAI_MODEL = 'gpt-4o-mini'
+$apiKey = Read-Host 'OpenAI API key' -AsSecureString
+$env:OPENAI_API_KEY = [System.Net.NetworkCredential]::new('', $apiKey).Password
+Remove-Variable apiKey
+.\.venv\Scripts\python.exe -m gbdt_vision.twin_server --host 127.0.0.1 --port 8000
+
+# 6. OPTIONAL: AZURE OPENAI INSTEAD OF SECTIONS 2 AND 5
+# Stop the dashboard with Ctrl+C, then run these in Terminal 1.
+$env:GBDT_AI_PROVIDER = 'azure'
+$env:AZURE_OPENAI_ENDPOINT = Read-Host 'Azure OpenAI resource endpoint'
+$env:AZURE_OPENAI_DEPLOYMENT = Read-Host 'Azure OpenAI deployment name'
+$env:AZURE_OPENAI_API_VERSION = '2024-10-21'
+$apiKey = Read-Host 'Azure OpenAI API key' -AsSecureString
+$env:AZURE_OPENAI_API_KEY = [System.Net.NetworkCredential]::new('', $apiKey).Password
+Remove-Variable apiKey
+.\.venv\Scripts\python.exe -m gbdt_vision.twin_server --host 127.0.0.1 --port 8000
+
+# 7. OPTIONAL: RECORDED VIDEO INSTEAD OF THE CAMERA
+# Stop the camera first. Enter the video path for THIS machine at the prompt.
+$videoPath = Read-Host 'Video file path'
+.\.venv\Scripts\python.exe -m gbdt_vision.cli --source "$videoPath" --camera-id camera-1 --output data/observations.jsonl --preview
+
+# 8. OPTIONAL: TESTS
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+
+# 9. OPTIONAL: DIFFERENT DASHBOARD PORT IF 8000 IS OCCUPIED
+.\.venv\Scripts\python.exe -m gbdt_vision.twin_server --host 127.0.0.1 --port 8001
+Start-Process 'http://127.0.0.1:8001/?mode=live'
+
+# STOP: Ctrl+C in each running terminal, or Q in the camera preview.
+# After stopping a GenAI-enabled dashboard, optionally clear terminal keys:
+Remove-Item Env:OPENAI_API_KEY -ErrorAction SilentlyContinue
+Remove-Item Env:AZURE_OPENAI_API_KEY -ErrorAction SilentlyContinue

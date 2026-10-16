@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f4">
+  <title>Floor Twin | Green Building</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/dashboard.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Green Building home"><span class="brand-mark">GB</span><span>GREEN BUILDING<span class="brand-sub">DIGITAL TWIN</span></span></a>
+    <span class="workspace-label">BUILDING OPERATIONS</span>
+    <div class="connection"><span id="connection-dot" class="dot"></span><span id="connection-text" role="status">Connecting</span></div>
+  </header>
+  <main>
+    <section class="page-heading">
+      <div><p class="eyebrow" id="building-name">GREEN BUILDING LAB / LEVEL 01</p><h1>Floor-plan twin<span class="title-dot">.</span></h1><p id="floor-name" class="subtitle">Innovation workspace</p></div>
+      <div class="heading-controls"><div class="segmented" role="group" aria-label="Data source"><button type="button" data-mode="live" aria-pressed="true">Live feed</button><button type="button" data-mode="demo" aria-pressed="false">Demo</button></div><button type="button" class="refresh" id="refresh">Refresh</button></div>
+    </section>
+    <div class="notice" id="notice" role="status" hidden></div>
+    <section class="metrics" aria-label="Floor summary">
+      <div class="metric-people"><span class="metric-label">Visible people</span><strong id="people">--</strong><span class="metric-note">Across reporting rooms</span></div>
+      <div class="metric-occupied"><span class="metric-label">Occupied rooms</span><strong id="occupied">--</strong><span class="metric-note">Current observations only</span></div>
+      <div class="metric-coverage"><span class="metric-label">Room coverage</span><strong id="coverage">--</strong><span class="metric-note" id="freshness">Freshness limit: 15 seconds</span></div>
+      <div class="metric-sync"><span class="metric-label">Last sync</span><strong class="time-value" id="last-sync">--:--:--</strong><span class="metric-note" id="source-label">Live camera observations</span></div>
+    </section>
+    <section class="twin-layout" aria-label="Floor plan and room details">
+      <div class="plan-section">
+        <div class="section-heading"><div><h2>Floor overview</h2><span class="section-caption">LEVEL 01 <span class="divider">/</span> SAMPLE LAYOUT</span></div><span class="plan-tag">2D PLAN</span></div>
+        <div class="plan-surface"><svg id="floor-plan" viewBox="0 0 1000 650" role="group" aria-label="Interactive floor plan"><title>Loading floor plan</title></svg><span class="north" aria-label="North">N ↑</span></div>
+        <div class="plan-footer"><div class="legend"><span><i class="dot occupied"></i>Occupied</span><span><i class="dot empty"></i>Empty</span><span><i class="dot stale"></i>Stale</span><span><i class="dot unknown"></i>Unknown</span></div><span class="scale-label">SCHEMATIC · NOT TO SCALE</span></div>
+      </div>
+      <aside class="room-detail" aria-label="Selected room details">
+        <div class="detail-top"><span class="eyebrow">SELECTED ROOM</span><span id="room-number">01</span></div>
+        <h2 id="room-name">Open workspace</h2><p id="room-use" class="subtitle">Shared workspace</p>
+        <span class="status-badge unknown" id="room-status">Unknown</span>
+        <div class="room-readings">
+          <div class="occupancy-detail"><span class="metric-label">Visible people</span><div><strong id="room-count">--</strong><span id="room-capacity">/ 16 capacity</span></div><meter id="capacity-meter" min="0" max="16" value="0" aria-label="Room occupancy relative to configured capacity"></meter></div>
+          <div class="brightness-reading"><span class="metric-label">Frame brightness</span><strong id="room-brightness">--</strong><meter id="brightness-meter" min="0" max="1" value="0" aria-label="Relative frame brightness" hidden></meter></div>
+        </div>
+        <div class="lighting-detail"><span class="eyebrow">LIGHTING CONDITION</span><strong id="light-scenario" data-status="unknown">Unknown lighting</strong><p id="light-message" class="lighting-message" role="status">No fresh frame brightness is available.</p></div>
+        <details class="technical-details"><summary>Observation details</summary>
+          <dl class="detail-list"><div><dt>Observation age</dt><dd id="room-age">No observation</dd></div><div><dt>Camera</dt><dd id="room-camera">camera-1</dd></div><div><dt>Vision room</dt><dd id="room-vision-id">room-1</dd></div><div><dt>Input source</dt><dd id="room-source">--</dd></div><div><dt>Last known count</dt><dd id="room-last-count">--</dd></div><div><dt>Lighting evidence</dt><dd id="light-evidence">None</dd></div><div><dt>Frame age</dt><dd id="light-age">No observation</dd></div><div><dt>Measurement area</dt><dd id="light-scope">--</dd></div><div><dt>Normal range</dt><dd id="light-range">30%-75%</dd></div></dl>
+        </details>
+        <details class="technical-details"><summary>Environmental sensors <span class="sensor-count">0 connected</span></summary><div class="detail-foot"><div><span>Temperature</span><span>Not connected</span></div><div><span>Power</span><span>Not connected</span></div><div><span>CO₂</span><span>Not connected</span></div></div></details>
+      </aside>
+    </section>
+    <div class="insights-layout">
+    <section class="lighting-scenario" aria-labelledby="lighting-title">
+      <div class="section-heading"><h2 id="lighting-title">Lighting scenarios</h2><span class="section-caption">CAMERA BRIGHTNESS</span></div>
+      <div class="lighting-summary"><div class="lighting-low"><span class="metric-label">Low</span><strong id="lighting-low">--</strong></div><div class="lighting-excessive"><span class="metric-label">Excessive</span><strong id="lighting-excessive">--</strong></div><div class="lighting-normal"><span class="metric-label">Normal</span><strong id="lighting-normal">--</strong></div></div>
+      <div id="lighting-alerts"></div>
+    </section>
+    <section class="advisor-section" aria-labelledby="advisor-title">
+      <div class="section-heading"><h2 id="advisor-title">Recommendations</h2><span class="section-caption" id="advisor-provider">CHECKING PROVIDER</span></div>
+      <div class="advisor-layout">
+        <form id="advisor-form" class="advisor-inputs">
+          <div class="segmented" role="group" aria-label="Recommendation inputs"><button type="button" data-advisor-mode="room" aria-pressed="true">Room data</button><button type="button" data-advisor-mode="manual" aria-pressed="false">What-if</button></div>
+          <p id="advisor-context" class="subtitle">No room selected</p>
+          <label for="advisor-people">Number of people</label><input type="number" id="advisor-people" min="0" max="10000" step="1" required readonly>
+          <label for="advisor-lighting">Lighting condition</label><select id="advisor-lighting" required disabled><option value="" disabled>Unknown</option><option value="low">Low lighting</option><option value="normal">Normal lighting</option><option value="excessive">Excessive lighting</option></select>
+          <button type="submit" id="advisor-generate" class="advisor-generate" disabled>Generate recommendations</button>
+        </form>
+        <div class="advisor-output" aria-busy="false" id="advisor-output"><p id="advisor-status" role="status">No recommendation generated.</p><article id="advisor-result" hidden><span class="section-caption" id="advisor-source"></span><h3 id="advisor-summary"></h3><p class="advisor-basis" id="advisor-basis"></p><ul id="advisor-actions"></ul><p class="advisor-caution" id="advisor-caution"></p></article></div>
+      </div>
+    </section>
+    </div>
+    <section class="room-register" aria-labelledby="register-title">
+      <div class="section-heading"><h2 id="register-title">Room register</h2><span class="section-caption" id="room-total">3 SPACES</span></div>
+      <div class="table-scroll"><table><thead><tr><th scope="col">Room</th><th scope="col">Status</th><th scope="col">Lighting</th><th scope="col">People</th><th scope="col">Capacity</th><th scope="col">Camera</th><th scope="col">Data age</th></tr></thead><tbody id="room-table"></tbody></table></div>
+    </section>
+    <footer class="page-footer"><span>GREEN BUILDING <span class="divider">/</span> FLOOR TWIN</span><span id="data-quality">Waiting for observations</span></footer>
+  </main>
+</body>
+</html>

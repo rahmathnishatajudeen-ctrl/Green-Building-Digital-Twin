@@ -1,0 +1,3 @@
+# Install the project and its vision, dashboard, GenAI, and test dependencies.
+# Package names and version constraints are maintained in pyproject.toml.
+-e .[twin,ai,test]

@@ -1,0 +1,1 @@
+"""Computer vision observations for the Green Building Digital Twin."""

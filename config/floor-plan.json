@@ -1,0 +1,18 @@
+{
+  "name": "Innovation workspace",
+  "building": "Green Building Lab",
+  "level": "Level 01",
+  "width": 1000,
+  "height": 650,
+  "rooms": [
+    {"id": "workspace", "name": "Open workspace", "label": "01", "use": "Shared workspace", "capacity": 16,
+    "camera_id": "camera-1", "vision_room_id": "room-1", "x": 50, "y": 60, "width": 490, "height": 450,
+    "lighting": {"low_brightness_threshold": 0.30, "high_brightness_threshold": 0.75}},
+    {"id": "meeting-a", "name": "Meeting room A", "label": "02", "use": "Meeting space", "capacity": 8,
+    "camera_id": "camera-1", "vision_room_id": "meeting-room-a", "x": 570, "y": 60, "width": 380, "height": 210,
+    "lighting": {"low_brightness_threshold": 0.30, "high_brightness_threshold": 0.75}},
+    {"id": "work-area", "name": "Work area", "label": "03", "use": "Focus space", "capacity": 6,
+    "camera_id": "camera-1", "vision_room_id": "work-area", "x": 570, "y": 300, "width": 380, "height": 210,
+    "lighting": {"low_brightness_threshold": 0.30, "high_brightness_threshold": 0.75}}
+  ]
+}
